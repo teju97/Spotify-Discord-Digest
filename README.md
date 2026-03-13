@@ -33,7 +33,7 @@ cp .env.example .env
 
 1. Go to [developer.spotify.com/dashboard](https://developer.spotify.com/dashboard)
 2. Create an app — name and description can be anything
-3. Add `http://localhost:3000/auth/callback` as a Redirect URI
+3. Add `http://127.0.0.1:3000/auth/callback` as a Redirect URI
 4. Copy the **Client ID** and **Client Secret** into your `.env`
 
 ### 4. Create a Discord Incoming Webhook
@@ -49,7 +49,7 @@ Start the server and complete the OAuth flow:
 npm run dev
 ```
 
-Visit [http://localhost:3000/auth](http://localhost:3000/auth) in your browser. After approving, you'll see a refresh token — copy it into your `.env` as `SPOTIFY_REFRESH_TOKEN`, then restart the server.
+Visit [http://127.0.0.1:3000/auth](http://127.0.0.1:3000/auth) in your browser. After approving, you'll see a refresh token — copy it into your `.env` as `SPOTIFY_REFRESH_TOKEN`, then restart the server.
 
 ```
 SPOTIFY_REFRESH_TOKEN=AQD...
@@ -67,7 +67,7 @@ npm run dev
 npm run build && npm start
 ```
 
-Server starts on `http://localhost:3000`.
+Server starts on `http://127.0.0.1:3000`.
 
 ---
 
@@ -77,7 +77,7 @@ Server starts on `http://localhost:3000`.
 Health check. Shows whether Spotify and Discord are configured.
 
 ```bash
-curl http://localhost:3000/status
+curl http://127.0.0.1:3000/status
 ```
 
 ### `GET /auth`
@@ -88,10 +88,10 @@ Runs the digest. Posts your top tracks to Discord.
 
 ```bash
 # Defaults: short_term, top 10
-curl -X POST http://localhost:3000/trigger
+curl -X POST http://127.0.0.1:3000/trigger
 
 # Custom: last 6 months, top 5
-curl -X POST http://localhost:3000/trigger \
+curl -X POST http://127.0.0.1:3000/trigger \
   -H "Content-Type: application/json" \
   -d '{"time_range": "medium_term", "limit": 5}'
 ```

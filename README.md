@@ -1,6 +1,6 @@
 # 🎵 Spotify → Discord Weekly Digest
 
-A lightweight TypeScript app that fetches your Spotify top tracks and posts a beautifully formatted digest to a Discord channel. Exposes a webhook so anyone can trigger it on demand.
+A lightweight TypeScript app that fetches your Spotify top tracks and posts a well formatted digest to a Discord channel. Exposes a webhook so anyone can trigger it on demand.
 
 ## What it does
 

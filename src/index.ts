@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express, { Request, Response } from "express";
 import { SpotifyClient, TimeRange } from "./spotify";
-import { DiscordClient } from "./discord";
+import { DiscordClient, DiscordBotClient } from "./discord";
 import { runDigest } from "./digest";
 
 const app = express();
@@ -11,11 +11,14 @@ const PORT = process.env.PORT ?? 3000;
 
 // Lazily instantiated so startup doesn't fail if .env is partially configured
 let spotify: SpotifyClient;
-let discord: DiscordClient;
+let discord: DiscordClient | DiscordBotClient;
 
-function getClients(): { spotify: SpotifyClient; discord: DiscordClient } {
+function getClients(): { spotify: SpotifyClient; discord: DiscordClient | DiscordBotClient } {
   if (!spotify) spotify = new SpotifyClient();
-  if (!discord) discord = new DiscordClient();
+  if (!discord) {
+    const useBot = Boolean(process.env.DISCORD_BOT_TOKEN && process.env.DISCORD_CHANNEL_ID);
+    discord = useBot ? new DiscordBotClient() : new DiscordClient();
+  }
   return { spotify, discord };
 }
 
@@ -24,14 +27,16 @@ function getClients(): { spotify: SpotifyClient; discord: DiscordClient } {
 // ---------------------------------------------------------------------------
 app.get("/status", (_req: Request, res: Response) => {
   const hasRefreshToken = Boolean(process.env.SPOTIFY_REFRESH_TOKEN);
+  const hasBotToken = Boolean(process.env.DISCORD_BOT_TOKEN && process.env.DISCORD_CHANNEL_ID);
   const hasWebhook = Boolean(process.env.DISCORD_WEBHOOK_URL);
+  const discordConfigured = hasBotToken || hasWebhook;
 
   res.json({
     status: "ok",
-    ready: hasRefreshToken && hasWebhook,
+    ready: hasRefreshToken && discordConfigured,
     auth: {
       spotify: hasRefreshToken ? "configured" : "missing — visit /auth",
-      discord: hasWebhook ? "configured" : "missing — set DISCORD_WEBHOOK_URL",
+      discord: hasBotToken ? "bot" : hasWebhook ? "webhook" : "missing — set DISCORD_BOT_TOKEN or DISCORD_WEBHOOK_URL",
     },
     endpoints: {
       "GET  /status": "Health check",
@@ -150,6 +155,6 @@ app.listen(PORT, () => {
   console.log(`   POST /trigger      — post digest to Discord\n`);
 
   if (!process.env.SPOTIFY_REFRESH_TOKEN) {
-    console.log("⚠️  No SPOTIFY_REFRESH_TOKEN found. Visit http://localhost:${PORT}/auth to connect Spotify.\n");
+    console.log(`⚠️  No SPOTIFY_REFRESH_TOKEN found. Visit http://127.0.0.1:${PORT}/auth to connect Spotify.\n`);
   }
 });

@@ -1,5 +1,5 @@
 import { SpotifyClient, TimeRange } from "./spotify";
-import { DiscordClient } from "./discord";
+import { DiscordSender } from "./discord";
 
 export interface DigestResult {
   success: boolean;
@@ -10,7 +10,7 @@ export interface DigestResult {
 
 export async function runDigest(
   spotify: SpotifyClient,
-  discord: DiscordClient,
+  discord: DiscordSender,
   timeRange: TimeRange = "short_term",
   limit = 10
 ): Promise<DigestResult> {

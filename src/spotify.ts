@@ -9,7 +9,6 @@ export interface Track {
   artists: string[];
   album: string;
   url: string;
-  popularity: number;
 }
 
 export type TimeRange = "short_term" | "medium_term" | "long_term";
@@ -103,7 +102,6 @@ export class SpotifyClient {
         artists: item.artists.map((a: { name: string }) => a.name),
         album: item.album.name,
         url: item.external_urls.spotify,
-        popularity: item.popularity,
       }));
     } catch (err) {
       const error = err as AxiosError;
@@ -122,7 +120,6 @@ export class SpotifyClient {
           artists: item.artists.map((a: { name: string }) => a.name),
           album: item.album.name,
           url: item.external_urls.spotify,
-          popularity: item.popularity,
         }));
       }
 

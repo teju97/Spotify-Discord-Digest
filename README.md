@@ -9,8 +9,6 @@ A lightweight TypeScript app that fetches your Spotify top tracks and posts a we
 3. Posts a rich embed to Discord via the Bot API (or Incoming Webhook as a fallback)
 4. Exposes a `POST /trigger` endpoint to kick this off on demand
 
-**Live during the onsite:** hit `POST /trigger` and watch the embed appear in Discord in real-time.
-
 ---
 
 ## Setup
